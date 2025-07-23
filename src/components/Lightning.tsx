@@ -19,7 +19,7 @@ interface LightningProps {
 
 const Lightning: React.FC<LightningProps> = ({
   hue = 230,
-  xOffset = -1,
+  xOffset = -0.5,
   speed = 1,
   intensity = 1,
   size = 2,

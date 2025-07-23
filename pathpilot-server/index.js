@@ -61,7 +61,7 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
     }
 
     const prompt = `
-      You are an expert career coach AI. Analyze the following profile of a junior developer and provide a honest Improvement steps.
+      You are an expert career coach AI. Please analyze the following profile of a junior developer and provide a HONEST score and only steps to improve the career.
       PROFILE DATA:
       ${profileData}
       
