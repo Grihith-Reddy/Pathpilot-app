@@ -13,17 +13,13 @@ const Header = () => {
     return (
         <header className="bg-gray-950/50 backdrop-blur-lg border border-gray-800 rounded-full">
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* --- MODIFIED: Improved flexbox layout for perfect alignment --- */}
                 <div className="flex items-center justify-between h-16">
-                    {/* Logo (takes up its own space) */}
                     <div className="flex-shrink-0">
                         <a href="/" className="flex items-center space-x-2">
                              <FaRocket className="h-8 w-8 text-indigo-500" />
                              <span className="text-xl font-bold text-white">PathPilot</span>
                         </a>
                     </div>
-
-                    {/* Navigation Links (centered in the remaining space) */}
                     <div className="flex-1 flex items-center justify-center">
                         <div className="hidden md:flex items-baseline space-x-4">
                             <a href="/#about-us" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
@@ -34,13 +30,12 @@ const Header = () => {
                             </a>
                         </div>
                     </div>
-
-                    {/* Profile Section (takes up its own space) */}
                     <div className="flex-shrink-0">
                         {user ? (
                             <div className="flex items-center space-x-3">
                                 <span className="text-white text-sm font-medium hidden sm:block">{user.displayName}</span>
-                                {user.photoURL && <img className="h-8 w-8 rounded-full" src={user.photoURL} alt="User profile" />}
+                                {/* --- MODIFIED: Replaced Avatar with a static image --- */}
+                                <img className="h-8 w-8 rounded-full" src="/Profile-pic.jpg" alt="User profile" />
                             </div>
                         ) : (
                              <a href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</a>

@@ -1,10 +1,10 @@
 // =======================================================================
-// CREATE THIS NEW COMPONENT FILE
 // FILE: /src/components/Lightning.tsx
 // =======================================================================
 'use client';
 
-import React, { useRef, useEffect, useState } from "react";
+// --- FIX: Removed unused imports ---
+import React, { useRef, useEffect } from "react";
 import { Renderer, Program, Triangle, Mesh } from "ogl";
 import "./Lightning.css";
 
@@ -19,10 +19,10 @@ interface LightningProps {
 
 const Lightning: React.FC<LightningProps> = ({
   hue = 230,
-  xOffset = -0.5,
+  xOffset = 0,
   speed = 1,
   intensity = 1,
-  size = 2,
+  size = 1,
   className = "",
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);

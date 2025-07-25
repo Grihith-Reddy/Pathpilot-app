@@ -1,7 +1,3 @@
-// =======================================================================
-// FILE: /src/app/page.tsx
-// This is your main home/onboarding page with the new loading animation.
-// =======================================================================
 'use client';
 
 import { useState, FC, ChangeEvent, useEffect, useMemo } from 'react';
@@ -12,31 +8,13 @@ import { FaGithub, FaLinkedin, FaFilePdf, FaCheckCircle, FaFileAlt, FaRocket } f
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/authContext';
 import CurvedLoop from '@/components/CurvedLoop';
-import MatrixAnimation from '@/components/MatrixAnimation'; // --- NEW: Import the animation ---
+import MatrixAnimation from '@/components/MatrixAnimation';
 
-// --- MODIFIED: LoadingAnalysis component with the new Matrix background ---
 const LoadingAnalysis: FC = () => {
     const messages = ["Connecting to AI model...","Parsing your resume...","Analyzing LinkedIn profile...", "Fetching your GitHub repositories...", "Sending profile data for analysis...", "Compiling skill matrix...", "Generating personalized feedback...", "Building your career roadmap...", "Finalizing recommendations..."];
     const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
     useEffect(() => { const interval = setInterval(() => { setCurrentMessageIndex(prev => (prev + 1) % messages.length); }, 1500); return () => clearInterval(interval); }, [messages.length]);
-    
-    return (
-        <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
-            <MatrixAnimation />
-            <div className="w-full max-w-md mx-auto text-center p-8 bg-black/50 backdrop-blur-sm rounded-2xl border border-gray-800">
-                <div className="animate-pulse text-5xl mb-6">🧠</div>
-                <h2 className="text-2xl font-bold text-white mb-4">AI Analysis in Progress</h2>
-                <p className="text-gray-400 mb-6">PathPilot is building your personalized career roadmap...</p>
-                <div className="bg-gray-900 rounded-lg p-4 text-left font-mono text-sm text-green-400 h-32 overflow-hidden relative">
-                    {messages.map((msg, index) => (
-                        <p key={index} className={`transition-all duration-500 ease-in-out absolute inset-0 ${index === currentMessageIndex ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
-                            <span className="text-green-500">&gt;</span> {msg}
-                        </p>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
+    return <div className="fixed inset-0 bg-black flex items-center justify-center z-50"><MatrixAnimation /><div className="w-full max-w-md mx-auto text-center p-8 bg-black/50 backdrop-blur-sm rounded-2xl border border-gray-800"><div className="animate-pulse text-5xl mb-6">🧠</div><h2 className="text-2xl font-bold text-white mb-4">AI Analysis in Progress</h2><p className="text-gray-400 mb-6">PathPilot is building your personalized career roadmap...</p><div className="bg-gray-900 rounded-lg p-4 text-left font-mono text-sm text-green-400 h-32 overflow-hidden relative">{messages.map((msg, index) => (<p key={index} className={`transition-all duration-500 ease-in-out absolute inset-0 ${index === currentMessageIndex ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}><span className="text-green-500">&gt;</span> {msg}</p>))}</div></div></div>;
 };
 
 const Onboarding: FC = () => {
@@ -47,27 +25,8 @@ const Onboarding: FC = () => {
     const [resumeFile, setResumeFile] = useState<File | null>(null);
     const router = useRouter();
 
-    const isLinkedinValid = useMemo(() => {
-        const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+\/?$/;
-        return linkedinRegex.test(linkedinUrl);
-    }, [linkedinUrl]);
-
-    useEffect(() => {
-        const queryParams = new URLSearchParams(window.location.search);
-        const githubSuccess = queryParams.get('github') === 'success';
-        const login = queryParams.get('login');
-        const token = queryParams.get('token');
-        if (githubSuccess && login && token) {
-            setGithubLogin(login);
-            sessionStorage.setItem('githubLogin', login);
-            sessionStorage.setItem('githubToken', token);
-            window.history.replaceState({}, document.title, "/");
-        } else {
-            const storedLogin = sessionStorage.getItem('githubLogin');
-            if (storedLogin) setGithubLogin(storedLogin);
-        }
-    }, []);
-
+    const isLinkedinValid = useMemo(() => { const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+\/?$/; return linkedinRegex.test(linkedinUrl); }, [linkedinUrl]);
+    useEffect(() => { const queryParams = new URLSearchParams(window.location.search); const githubSuccess = queryParams.get('github') === 'success'; const login = queryParams.get('login'); const token = queryParams.get('token'); if (githubSuccess && login && token) { setGithubLogin(login); sessionStorage.setItem('githubLogin', login); sessionStorage.setItem('githubToken', token); window.history.replaceState({}, document.title, "/"); } else { const storedLogin = sessionStorage.getItem('githubLogin'); if (storedLogin) setGithubLogin(storedLogin); } }, []);
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => { if (e.target.files && e.target.files[0]) setResumeFile(e.target.files[0]); };
     const handleStartAnalysis = async () => { if (!githubLogin) { alert("Please connect your GitHub account first."); return; } if (!isLinkedinValid) { alert("Please enter a valid LinkedIn profile URL."); return; } if (!resumeFile) { alert("Please upload your resume to continue."); return; } const githubToken = sessionStorage.getItem('githubToken'); if (!githubToken) { alert("GitHub connection error. Please try connecting again."); return; } setIsAnalyzing(true); try { const formData = new FormData(); formData.append('linkedinUrl', linkedinUrl); formData.append('githubLogin', githubLogin); formData.append('resume', resumeFile); formData.append('githubToken', githubToken); const response = await fetch('http://localhost:8000/api/analyze', { method: 'POST', body: formData }); if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); const data = await response.json(); sessionStorage.setItem('pathpilotDashboardData', JSON.stringify(data)); router.push('/dashboard'); } catch (error) { console.error("Failed to fetch from backend:", error); alert('Error: Could not get a response from the AI. Check the backend console.'); setIsAnalyzing(false); } };
 
@@ -77,12 +36,12 @@ const Onboarding: FC = () => {
     return (
         <div className="w-full max-w-6xl mx-auto p-8 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div className="text-center md:text-left">
-                {user.photoURL && <img src={user.photoURL} alt="User" className="w-32 h-32 rounded-full mx-auto md:mx-0 mb-6 border-4 border-gray-700"/>}
+                {/* --- MODIFIED: Replaced Avatar with a static image --- */}
+                <img src="/Profile-pic.jpg" alt="User" className="w-32 h-32 rounded-full mx-auto md:mx-0 mb-6 border-4 border-gray-700"/>
                 <h2 className="text-5xl font-bold text-white mb-4">
                     Welcome, <span className="text-indigo-500">{user.displayName}!</span>
                 </h2>
             </div>
-
             <div className="w-full max-w-md mx-auto">
                  <div className="space-y-4 text-left bg-black/20 backdrop-blur-sm p-8 rounded-2xl border border-gray-800">
                     {githubLogin ? (<div className="w-full bg-green-900/50 text-green-300 font-bold py-3 px-4 rounded-lg flex items-center justify-center"><FaCheckCircle className="mr-3 text-xl" /> GitHub Connected: {githubLogin}</div>) : (<a href="http://localhost:8000/api/github/connect" className="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center transition-colors"><FaGithub className="mr-3 text-2xl" /> Connect GitHub Account</a>)}
@@ -108,7 +67,7 @@ const Login: FC = () => {
 const AboutUs = () => {
     return (
         <section id="about-us" className="py-20 text-white">
-                            <CurvedLoop marqueeText="Let's build your future, one commit at a time." curveAmount={100} />
+                            <CurvedLoop marqueeText="Let's build your future, one commit at a time." curveAmount={50} />
 
             <div className="max-w-4xl mx-auto px-4">
                 <div className="bg-black/20 backdrop-blur-sm p-8 md:p-12 rounded-2xl border border-gray-800 text-center">
