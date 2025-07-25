@@ -5,7 +5,7 @@ import './globals.css';
 import { AuthProvider, useAuth } from '@/lib/authContext';
 import { FaRocket, FaSync } from 'react-icons/fa';
 import Lightning from '@/components/Lightning';
-
+import Link from 'next/link';
 const inter = Inter({ subsets: ['latin'] });
 
 const Header = () => {
@@ -13,32 +13,37 @@ const Header = () => {
     return (
         <header className="bg-gray-950/50 backdrop-blur-lg border border-gray-800 rounded-full">
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* --- MODIFIED: Improved flexbox layout for perfect alignment --- */}
                 <div className="flex items-center justify-between h-16">
+                    {/* Logo (takes up its own space) */}
                     <div className="flex-shrink-0">
-                        <a href="/" className="flex items-center space-x-2">
+                        <Link href="/" className="flex items-center space-x-2">
                              <FaRocket className="h-8 w-8 text-indigo-500" />
                              <span className="text-xl font-bold text-white">PathPilot</span>
-                        </a>
+                        </Link>
                     </div>
+
+                    {/* Navigation Links (centered in the remaining space) */}
                     <div className="flex-1 flex items-center justify-center">
                         <div className="hidden md:flex items-baseline space-x-4">
-                            <a href="/#about-us" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
-                            <a href="/dashboard" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                            <a href="/" className="flex items-center text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                            <Link href="/#about-us" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</Link>
+                            <Link href="/dashboard" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</Link>
+                            <Link href="/" className="flex items-center text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                                 <FaSync className="mr-2" />
                                 Regenerate
-                            </a>
+                            </Link>
                         </div>
                     </div>
+
+                    {/* Profile Section (takes up its own space) */}
                     <div className="flex-shrink-0">
                         {user ? (
                             <div className="flex items-center space-x-3">
                                 <span className="text-white text-sm font-medium hidden sm:block">{user.displayName}</span>
-                                {/* --- MODIFIED: Replaced Avatar with a static image --- */}
-                                <img className="h-8 w-8 rounded-full" src="/Profile-pic.jpg" alt="User profile" />
+                                {user.photoURL && <img className="h-8 w-8 rounded-full" src={user.photoURL} alt="User profile" />}
                             </div>
                         ) : (
-                             <a href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</a>
+                             <Link href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</Link>
                         )}
                     </div>
                 </div>
