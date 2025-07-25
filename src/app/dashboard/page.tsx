@@ -6,7 +6,7 @@ import { FaGithub, FaLinkedin, FaLightbulb, FaCheckCircle } from 'react-icons/fa
 import { FiTarget } from 'react-icons/fi';
 import { GoGoal } from "react-icons/go";
 import { useAuth } from '@/lib/authContext';
-
+import Link from 'next/link';
 
 interface DashboardData {
     userScore: number;
@@ -65,7 +65,7 @@ const DashboardPage: FC = () => {
 
     if (dataLoading || authLoading) return <div className="flex min-h-screen items-center justify-center pt-24"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-500"></div></div>;
     
-    if (!data) return <div className="flex min-h-screen flex-col items-center justify-center text-white pt-24"><h2 className="text-2xl font-bold mb-4">No analysis data found.</h2><p className="text-gray-400">Please go back to the home page and generate your roadmap.</p><a href="/" className="mt-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg">Go Home</a></div>;
+    if (!data) return <div className="flex min-h-screen flex-col items-center justify-center text-white pt-24"><h2 className="text-2xl font-bold mb-4">No analysis data found.</h2><p className="text-gray-400">Please go back to the home page and generate your roadmap.</p><Link href="/" className="mt-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg">Go Home</Link></div>;
 
     const chartData = [{ name: 'score', value: data.userScore, fill: '#8884d8' }];
 
@@ -90,7 +90,7 @@ const DashboardPage: FC = () => {
                         <DashboardCard title="Career Skill Score" icon={<FiTarget />}>
                             <div className="w-48 h-48 mx-auto"><ResponsiveContainer width="100%" height="100%"><RadialBarChart innerRadius="70%" outerRadius="100%" data={chartData} startAngle={90} endAngle={-270} barSize={20}><PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} /><RadialBar background dataKey='value' cornerRadius={10} /><text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white text-4xl font-bold">{data.userScore}</text><text x="50%" y="65%" textAnchor="middle" dominantBaseline="middle" className="fill-gray-400 text-sm">/ 100</text></RadialBarChart></ResponsiveContainer></div>
                         </DashboardCard>
-                        <DashboardCard title="You'd Excel At..." icon={<FaLightbulb />}>
+                        <DashboardCard title="You would Excel At..." icon={<FaLightbulb />}>
                             <div className="flex flex-wrap gap-2 justify-center pt-2">{(data.excelAt || []).map(skill => (<span key={skill} className="bg-indigo-500/20 text-indigo-300 py-1 px-3 rounded-full text-sm font-medium">{skill}</span>))}</div>
                         </DashboardCard>
                     </div>
